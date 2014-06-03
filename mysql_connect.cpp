@@ -28,27 +28,24 @@ using namespace std;
  */
 my_mysql::my_mysql()
 {
-	mysql_init(&my_mysql_t);
-
-	if(my_mysql_t) {
-		cout << mysql_error(&my_mysql_t);
-	}
+	mysql_init(&this->my_mysql_t);
+	
 }
 
 /*@数据库的连接函数
  *@参数是为连接其他的数据库提供接口
  *
  */
-void my_mysql::my_mysql_connect(const char *connect_host 
+void my_mysql::my_mysql_connect(const char *connect_host, 
 				const char *mysql_name,
 				const char *mysql_passwd,
 				const char *mysql_table)
 {
-	mysql_real_connect(&my_mysql_t, connect_host, mysql_name, 
-				mysql_passwd, mysql_table, NULL, 0, NULL, 0 );
+	mysql_real_connect(&this->my_mysql_t, connect_host, mysql_name, 
+				mysql_passwd, mysql_table, 0, NULL, 0 );
 		
-	if (my_mysql_t) {
-		cout << mysql_error(&my_mysql_t);
+	if (&this->my_mysql_t ) {
+		cout << mysql_error(&this->my_mysql_t);
 	}
 }
 
@@ -57,9 +54,13 @@ void my_mysql::my_mysql_connect(const char *connect_host
  *
  *
  */
-void my_mysql::my_mysql_work(const cahr *commect)
+void my_mysql::my_mysql_work(const char *commect)
 {
-	mysql_query(&my_mysql_t, commect);
+	mysql_query(&this->my_mysql_t, commect);
+	
+	if (&this->my_mysql_t ) {
+		cout << mysql_error(&this->my_mysql_t) <<endl;
+	}
 }
 
 
@@ -69,5 +70,21 @@ void my_mysql::my_mysql_work(const cahr *commect)
  */
 my_mysql::~my_mysql()
 {
-	mysql_close(&my_mysql_t);
+	mysql_close(&this->my_mysql_t);
 }
+
+#define DEBUG
+#ifdef  DEBUG
+
+int main(int argc, char *argv[])
+{
+	my_mysql my_db;
+
+	my_db.my_mysql_connect("127.0.0.1", "root", NULL, NULL);
+
+	my_db.my_mysql_work("drop database dubingyang");
+
+	my_db.~my_mysql();
+}
+
+#endif 
